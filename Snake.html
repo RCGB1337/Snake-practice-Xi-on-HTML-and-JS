@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>贪吃蛇小游戏</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+
+            margin: 0;
+            padding: 0;
+            height: auto;
+            display: block;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(125deg, hsl(210, 29%, 24%), #27ae60, #2980b9, #e74c3c, #8e44ad);
+            animation: bganimation 15s linear infinite;
+        }
+
+        @keyframes bganimation {
+            0% {
+                background-position: 0% 50%;
+                background-size: 400% 400%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+                background-size: 400% 400%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+                background-size: 400% 400%;
+            }
+        }
+
+        h1 {
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: lighter;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            background-color: #eee;
+            width: fit-content;
+            margin: auto;
+            background: linear-gradient(125deg, #81c0ff, #70f5a8, #6cbaee, #f77f72, #cb79ee);
+            animation: bganimation 15s linear infinite;
+            color: #ffffff;
+            background-size: 50px;
+            opacity: 0.85;
+            margin-top: 10px;
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            text-shadow: 3px 2px 1px #9daef5;
+            -webkit-box-shadow: 6px 5px 24px #666666;
+            -moz-box-shadow: 6px 5px 24px #666666;
+            box-shadow: 6px 5px 24px #666666;
+            font-size: 50px;
+            text-decoration: none;
+            display: block;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: lighter;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            background-color: #eee;
+            width: fit-content;
+            margin: auto;
+            background: linear-gradient(125deg, #81c0ff, #70f5a8, #6cbaee, #f77f72, #cb79ee);
+            animation: bganimation 15s linear infinite;
+            color: #ffffff;
+            background-size: 50px;
+            opacity: 0.85;
+            margin-top: 10px;
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            text-shadow: 3px 2px 1px #9daef5;
+            -webkit-box-shadow: 6px 5px 24px #666666;
+            -moz-box-shadow: 6px 5px 24px #666666;
+            box-shadow: 6px 5px 24px #666666;
+            font-size: 27px;
+            text-decoration: none;
+            display: block;
+        }
+        h3 {
+            opacity: 0;
+        }
+        h3:hover {
+            margin-bottom: 10px;
+            text-align: center;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            font-weight: lighter;
+            font-style: italic;
+            border: 1px solid #ccc;
+            padding: 5px 10px;
+            background-color: #eee;
+            width: fit-content;
+            margin: auto;
+            background: linear-gradient(125deg, #81c0ff, #70f5a8, #6cbaee, #f77f72, #cb79ee);
+            animation: bganimation 15s linear infinite;
+            color: #ffffff;
+            background-size: 50px;
+            opacity: 0.85;
+            margin-top: 10px;
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            text-shadow: 3px 2px 1px #9daef5;
+            -webkit-box-shadow: 6px 5px 24px #666666;
+            -moz-box-shadow: 6px 5px 24px #666666;
+            box-shadow: 6px 5px 24px #666666;
+            font-size: 27px;
+            text-decoration: none;
+            display: block;
+            transition: all 0.4s ease;
+            -moz-transform: translateZ(0);
+            -ms-transform: translateZ(0);
+            -o-transform: translateZ(0);
+            transform: translateZ(0);
+
+
+        }
+
+        .map {
+            width: 600px;
+            height: 600px;
+            background-color: #eee;
+            margin: 20px auto;
+            position: relative;
+            opacity: 0.60;
+            border-style: solid;
+            border-radius: 10px;
+            box-shadow: 6px 5px 24px #666666;
+            backdrop-filter: blur();
+        }
+
+        .snake {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background-color: #76D7EA;
+        }
+
+        .snake-head {
+            background-color: #00FFCD;
+        }
+
+        .food {
+            width: 20px;
+            height: 20px;
+            position: absolute;
+            background: linear-gradient(125deg, #0080ff, #00ff6a, #0099ff, #ff1900, #b300ff);
+            animation: bganimation 15s linear infinite;
+            border-radius: 10px;
+        }
+
+        .btn {
+            background: linear-gradient(125deg, #81c0ff, #70f5a8, #6cbaee, #f77f72, #cb79ee);
+            animation: bganimation 15s linear infinite;
+            /* 给按钮添加圆角 */
+            -webkit-border-radius: 28;
+            -moz-border-radius: 28;
+            border-radius: 28px;
+            text-shadow: 3px 2px 1px #9daef5;
+            -webkit-box-shadow: 6px 5px 24px #666666;
+            -moz-box-shadow: 6px 5px 24px #666666;
+            box-shadow: 6px 5px 24px #666666;
+            font-family: Arial;
+            color: #fafafa;
+            font-size: 27px;
+            padding: 19px;
+            text-decoration: none;
+            margin: 10px auto;
+            display: block;
+        }
+
+        .btn:hover {
+            background: linear-gradient(125deg, #d06dfa, #f88174, #78c5f8, #6ffaa9, #7abdff);
+            animation: bganimation 15s linear infinite;
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>贪吃蛇</h1>
+    <button id="btn" class="btn" type="button">开始游戏</button>
+    <div id="map" class="map"></div>
+    <h2 id="count"></h2>
+    <!--
+        <h3>teamMembers for 组长:胡明德 成员: 顾玉枫 臧英杰 曾超</h3>
+    -->
+    <h3>Made by Mer3y</h3>
+    <script>
+        var count = 0;
+        var button = document.getElementById("btn");
+        button.addEventListener("click", function () {
+            button.innerText = "再来一次"
+            count = 0;
+            countEle.innerHTML = '你吃到了' + count + "个食物";
+            startGame();
+        });
+        let countEle = document.getElementById('count');
+        countEle.innerHTML = '你吃到了' + count + "个食物";
+        // 获取地图元素
+        var map = document.getElementById("map");
+        // 获取按钮元素
+        var btn = document.getElementById("btn");
+        // 定义食物构造函数
+        function Food() {
+            // 食物的位置
+            this.x = 0;
+            this.y = 0;
+            // 食物的元素
+            this.element = document.createElement("div");
+            // 设置食物的样式
+            this.element.className = "food";
+            // 将食物添加到地图中
+            map.appendChild(this.element);
+            // 初始化食物的位置
+            this.init = function () {
+                // 随机生成食物的位置，范围是0-29
+                this.x = Math.floor(Math.random() * 30);
+                this.y = Math.floor(Math.random() * 30);
+                
+                // 设置食物的偏移量
+                this.element.style.left = this.x * 20 + "px";
+                this.element.style.top = this.y * 20 + "px";
+            }
+            
+        }
+        // 创建食物对象
+        var food = new Food();
+        
+        // 初始化食物
+        food.init();
+
+        // 定义蛇构造函数
+        function Snake() {
+            // 蛇的身体，用数组表示，每个元素是一个对象，包含x,y和color属性
+            this.body = [
+                { x: 3, y: 2, color: "#00FFCD" }, // 蛇头
+                { x: 2, y: 2, color: "#76D7EA" }, // 蛇身
+                { x: 1, y: 2, color: "#76D7EA" } // 蛇尾
+            ];
+            this.reset = function () {
+                this.body = [
+                    { x: 3, y: 2, color: "#00FFCD" },
+                    { x: 2, y: 2, color: "#76D7EA" },
+                    { x: 1, y: 2, color: "#76D7EA" }
+                ];
+                this.init();
+                this.direction = "right";
+            }
+            // 蛇的方向，默认向右
+            this.direction = "right";
+            // 蛇的元素，用数组表示，每个元素是一个div
+            this.elements = [];
+            // 初始化蛇
+            this.init = function () {
+                // 删除之前的蛇
+                this.remove();
+                // 遍历蛇的身体
+                for (var i = 0; i < this.body.length; i++) {
+                    // 获取当前的身体部分
+                    var obj = this.body[i];
+                    // 创建div元素
+                    var div = document.createElement("div");
+                    // 设置div的样式
+                    div.className = "snake";
+                    div.style.backgroundColor = obj.color;
+                    div.style.left = obj.x * 20 + "px";
+                    div.style.top = obj.y * 20 + "px";
+                    // 如果是蛇头，添加蛇头的类名
+                    if (i == 0) {
+                        div.classList.add("snake-head");
+                    }
+                    // 将div添加到地图中
+                    map.appendChild(div);
+                    // 将div添加到蛇的元素数组中
+                    this.elements.push(div);
+                }
+            }
+            // 删除蛇
+            this.remove = function () {
+                // 从后往前删除
+                for (var i = this.elements.length - 1; i >= 0; i--) {
+                    // 从地图中移除div
+                    map.removeChild(this.elements[i]);
+                    // 从数组中移除div
+                    this.elements.splice(i, 1);
+                }
+            }
+            // 移动蛇
+            this.move = function () {
+                // 改变蛇身的位置，从后往前改变
+                for (var i = this.body.length - 1; i > 0; i--) {
+                    // 每个身体部分的位置等于前一个身体部分的位置
+                    this.body[i].x = this.body[i - 1].x;
+                    this.body[i].y = this.body[i - 1].y;
+                }
+                // 改变蛇头的位置，根据方向改变
+                switch (this.direction) {
+                    case "right":
+                        this.body[0].x += 1;
+                        break;
+                    case "left":
+                        this.body[0].x -= 1;
+                        break;
+                    case "up":
+                        this.body[0].y -= 1;
+                        break;
+                    case "down":
+                        this.body[0].y += 1;
+                        break;
+                }
+                // 重新初始化蛇
+                this.init();
+                // 判断是否吃到食物，如果蛇头的位置和食物的位置重合，就表示吃到了
+                if (this.body[0].x == food.x && this.body[0].y == food.y) {
+                    // 获取蛇尾的位置和颜色
+                    var lastX = this.body[this.body.length - 1].x;
+                    var lastY = this.body[this.body.length - 1].y;
+                    var lastColor = this.body[this.body.length - 1].color;
+                    // 在蛇的身体数组中添加一个新的元素，位置和颜色和蛇尾一样
+                    this.body.push({
+                        x: lastX,
+                        y: lastY,
+                        color: lastColor
+                    });
+                    // 重新初始化食物
+                    food.init();
+                    count += 1;
+                    countEle.innerHTML = '你吃到了' + count + "个食物";
+
+                }
+                // 判断是否撞墙，如果蛇头的位置超出地图的范围，就表示撞墙了
+                if (this.body[0].x < 0 || this.body[0].x > 29 || this.body[0].y < 0 || this.body[0].y > 29) {
+                    // 清除定时器
+                    clearInterval(timer);
+                    // 弹出提示
+                    if (count == 52) {
+                        alert("有你的时光，像流星划过天际，瞬间永恒。");
+                    } else {
+                        alert("游戏结束！你吃了" + count + "个食物!");
+                    }
+
+                }
+                // 增加一个碰撞判断函数
+                function checkCollision() {
+                    // 遍历蛇身体判断是否撞到自己
+                    for (let i = 1; i < snake.body.length; i++) {
+                        let part = snake.body[i];
+                        if (snake.body[0].x === part.x && snake.body[0].y === part.y) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                // 在移动后判断
+                if (checkCollision()) {
+                    clearInterval(timer);
+                    alert("撞到自己了!你吃了" + count + "个食物!")
+                }
+
+            }
+        }
+        // 创建蛇对象
+        var snake = new Snake();
+        // 初始化蛇
+        snake.init();
+
+        // 定义定时器，让蛇自动移动
+        var timer = null;
+
+        // 定义开始游戏的函数
+        function startGame() {
+            snake.reset();
+            // 如果定时器已经存在，先清除
+            if (timer) {
+                clearInterval(timer);
+            }
+            // 设置定时器，让蛇移动
+            timer = setInterval(function () {
+                snake.move();
+            }, 200);
+            // 禁用按钮
+            btn.disabled = false;
+        }
+
+        // 监听按钮事件，开始游戏
+        btn.addEventListener("click", function () {
+            startGame();
+        });
+
+        // 监听键盘事件，改变蛇的方向
+        document.addEventListener("keydown", function (event) {
+            // 获取按键的编码
+            var code = event.keyCode;
+            // 根据按键的编码改变蛇的方向，同时防止掉头
+            switch (code) {
+                case 37: // 左键
+                    if (snake.direction != "right") {
+                        snake.direction = "left";
+                    }
+                    break;
+                case 38: // 上键
+                    if (snake.direction != "down") {
+                        snake.direction = "up";
+                    }
+                    break;
+                case 39: // 右键
+                    if (snake.direction != "left") {
+                        snake.direction = "right";
+                    }
+                    break;
+                case 40: // 下键
+                    if (snake.direction != "up") {
+                        snake.direction = "down";
+                    }
+                    break;
+
+                case 65: // 左键
+                    if (snake.direction != "right") {
+                        snake.direction = "left";
+                    }
+                    break;
+                case 87: // 上键
+                    if (snake.direction != "down") {
+                        snake.direction = "up";
+                    }
+                    break;
+                case 68: // 右键
+                    if (snake.direction != "left") {
+                        snake.direction = "right";
+                    }
+                    break;
+                case 83: // 下键
+                    if (snake.direction != "up") {
+                        snake.direction = "down";
+                    }
+                    break;
+            }
+        });
+
+
+    </script>
+</body>
+
+</html>
